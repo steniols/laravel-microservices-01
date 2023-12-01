@@ -52,4 +52,11 @@
       'Flare' => 'Spatie\\LaravelIgnition\\Facades\\Flare',
     ),
   ),
+  'vladimir-yuldashev/laravel-queue-rabbitmq' => 
+  array (
+    'providers' => 
+    array (
+      0 => 'VladimirYuldashev\\LaravelQueueRabbitMQ\\LaravelQueueRabbitMQServiceProvider',
+    ),
+  ),
 );

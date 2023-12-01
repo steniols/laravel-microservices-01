@@ -31,7 +31,7 @@ class CompanyController extends Controller
     {
         $companies = $this->companyService->getCompanies($request->get('filter', ''));
 
-        return CompanyResource::collection($companies);
+        return CompanyResource::collection($companies); 
     }
 
     /**
@@ -44,8 +44,8 @@ class CompanyController extends Controller
     {
         $company = $this->companyService->createNewCompany($request->validated(), $request->image);
 
-        // CompanyCreated::dispatch($company->email)
-        //                     ->onQueue('queue_email');
+        CompanyCreated::dispatch($company->email)
+                            ->onQueue('queue_email');
 
         return new CompanyResource($company);
     }
@@ -60,12 +60,12 @@ class CompanyController extends Controller
     {
         $company = $this->companyService->getCompanyByUUID($uuid);
 
-        $evaluations = $this->evaluationService->getEvaluationsCompany($uuid);
+        // $evaluations = $this->evaluationService->getEvaluationsCompany($uuid);
 
-        return (new CompanyResource($company))
-                        ->additional([
-                           'evaluations' => json_decode($evaluations)
-                        ]);
+        return (new CompanyResource($company));
+                        // ->additional([
+                        //    'evaluations' => json_decode($evaluations)
+                        // ]);
     }
 
     /**

@@ -2,14 +2,14 @@
 
 namespace App\Services;
 
-use Carlosfgti\MicroservicesCommon\Services\Traits\ConsumeExternalService;
+use Steniols\MicroservicesCommon\Services\Traits\ConsumeExternalService;
 
 class EvaluationService
 {
     use ConsumeExternalService;
 
     protected $url;
-    protected $token;
+    protected $token; 
 
     public function __construct()
     {

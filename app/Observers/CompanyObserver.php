@@ -5,7 +5,7 @@ namespace App\Observers;
 use Illuminate\Support\Str;
 use App\Models\Company;
 
-class CompanyObserve
+class CompanyObserver
 {
     /**
      * Handle the Company "created" event.
