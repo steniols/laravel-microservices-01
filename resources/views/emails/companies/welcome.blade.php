@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
 <body>
-    Welcome new company!
+    <p>Welcome new company!</p>
 </body>
 </html>

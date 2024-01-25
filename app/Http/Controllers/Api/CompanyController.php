@@ -44,8 +44,7 @@ class CompanyController extends Controller
     {
         $company = $this->companyService->createNewCompany($request->validated(), $request->image);
 
-        CompanyCreated::dispatch($company->email)
-                            ->onQueue('queue_email');
+        CompanyCreated::dispatch($company->email);
 
         return new CompanyResource($company);
     }
@@ -60,7 +59,7 @@ class CompanyController extends Controller
     {
         $company = $this->companyService->getCompanyByUUID($uuid);
 
-        // $evaluations = $this->evaluationService->getEvaluationsCompany($uuid);
+        $evaluations = $this->evaluationService->getEvaluationsCompany($uuid);
 
         return (new CompanyResource($company));
                         // ->additional([
