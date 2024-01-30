@@ -1,66 +1,151 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Companies API 
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+A companies API with all CRUD operations, using microservices and RabbitMQ.
 
-## About Laravel
+## Requirements
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+* Docker(v20.10.6)
+* Docker Compose(v1.24.0)
+* Port 8000 open
+* [Microservice 02](https://github.com/steniols/laravel-microservices-02) running
+* A [Mailtrap](https://mailtrap.io/) inbox
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## Install
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+Create a `.env` file:
 
-## Learning Laravel
+```bash
+cp .env.sample .env
+```
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+Docker containers:
+```bash
+docker-compose up -d
+```
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+Access docker service:
+```bash
+docker-compose exec micro_01 bash
+```
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains over 2000 video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+Install composer dependencies:
+```bash
+composer install
+```
 
-## Laravel Sponsors
+Run migrations:
+```bash
+php artisan migrate
+```
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+## Using Mailtrap:
 
-### Premium Partners
+Update the `.env` file with your Mailtrap inbox configs, if you don't want to use these service, 
+use your own email configs.
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[WebReinvent](https://webreinvent.com/)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Jump24](https://jump24.co.uk)**
-- **[Redberry](https://redberry.international/laravel/)**
-- **[Active Logic](https://activelogic.com)**
-- **[byte5](https://byte5.de)**
-- **[OP.GG](https://op.gg)**
+## Using CloudAMQP:
 
-## Contributing
+By default the project setup is configured to use Redis for queue management, but you can use RabbitMQ if you prefer, do these steps:
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+1) Create an instance of RabbitMQ in [CloudAMQP](https://cloudamqp.com)
+2) Update QUEUE_CONNECTION variable in `.env` to 'rabbitmq'
+3) Update other RABBITMQ variables in `.env` according with your new instance
 
-## Code of Conduct
+Update the `.env` file with your CloudAMQP instance configs, if you don't want to use these service, do these steps:
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+## HTTP requests
 
-## Security Vulnerabilities
+List all companies:
+```bash
+curl --request GET \
+  --url http://localhost:8000/companies \
+  --header 'accept: application/json'
+```
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+Get company by id:
+```bash
+curl --request GET \
+  --url http://localhost:8000/companies/COMPANY_ID \
+  --header 'accept: application/json'
+```
 
-## License
+Create company:
+```bash
+curl --request POST \
+  --url http://localhost:8000/companies \
+  --header 'Content-Type: multipart/form-data' \
+  --header 'accept: application/json' \
+  --form 'name=Company name test' \
+  --form whatsapp=99999999999 \
+  --form telefone=1144443333 \
+  --form email=companytest@gmail.com \
+  --form category_id=1
+```
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+Update company:
+```bash
+curl --request POST \
+  --url http://localhost:8000/companies/COMPANY_ID \
+  --header 'Content-Type: multipart/form-data' \
+  --header 'accept: application/json' \
+  --form 'name=Company new name' \
+  --form whatsapp=99999999991 \
+  --form telefone=1155556666 \
+  --form email=companynewemail@gmail.com \
+  --form category_id=1 \
+  --form _method=PUT
+```
+
+Delete company:
+```bash
+curl --request DELETE \
+  --url http://localhost:8000/companies/COMPANY_ID \
+  --header 'Content-Type: application/json' \
+  --header 'accept: application/json'
+```
+
+List all categories:
+```bash
+curl --request GET \
+  --url http://localhost:8000/categories \
+  --header 'accept: application/json'
+```
+
+Get category by id:
+```bash
+curl --request GET \
+  --url http://localhost:8000/categories/CATEGORY_ID \
+  --header 'accept: application/json'
+```
+
+Create category:
+```bash
+curl --request POST \
+  --url http://localhost:8000/categories \
+  --header 'Content-Type: application/json' \
+  --header 'accept: application/json' \
+  --data '{
+	"title": "Category 01",
+	"description": "Category description example"
+}'
+```
+
+Update category:
+```bash
+curl --request PUT \
+  --url http://localhost:8000/categories/CATEGORY_ID \
+  --header 'Content-Type: application/json' \
+  --header 'accept: application/json' \
+  --data '{
+	"title": "Category 01 new name",
+	"description": "Category new description"
+}'
+```
+
+Delete category:
+```bash
+curl --request DELETE \
+  --url http://localhost:8000/categories/CATEGORY_ID \
+  --header 'Content-Type: application/json' \
+  --header 'accept: application/json'
+```
