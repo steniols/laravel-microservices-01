@@ -33,6 +33,11 @@ Install composer dependencies:
 composer install
 ```
 
+Generate key:
+```bash
+php artisan key:generate
+```
+
 Run migrations:
 ```bash
 php artisan migrate
